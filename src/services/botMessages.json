@@ -1,0 +1,31 @@
+[
+  {
+    "text": "Vou sugerir um prato completo (carboidrato + proteína + fibras), simples e dentro de uma proposta saudável:<br /><br />🍴 Arroz, feijão, carne moída refogada e legumes<br />🥗 Porção sugerida (equilibrada):",
+    "list": [
+      "3 colheres de sopa de arroz",
+      "1 concha média de feijão",
+      "100-120g de carne moída",
+      "Legumes à vontade (cenoura + tomate)"
+    ],
+    "links": [
+      "https://www.youtube.com/watch?v=exemplo1",
+      "https://www.youtube.com/watch?v=exemplo2"
+    ],
+    "images": [
+      { "src": "https://img.youtube.com/vi/owBbiN_kQ2Q/0.jpg", "type": "play" },
+      { "src": "https://img.youtube.com/vi/owBbiN_kQ2Q/0.jpg", "type": "more", "count": "+1" }
+    ]
+  },
+  {
+    "text": "Não se esqueça da hidratação! 💧<br /><br />O ideal é consumir pelo menos 35ml de água por kg de peso corporal ao longo do dia. Você tem o costume de andar com uma garrafinha?",
+    "list": [],
+    "links": [],
+    "images": []
+  },
+  {
+    "text": "Excelente! Se amanhã você quiser variar o cardápio, tenho ótimas opções focadas em frango ou peixe. É só me chamar. 🥦",
+    "list": [],
+    "links": [],
+    "images": []
+  }
+]
