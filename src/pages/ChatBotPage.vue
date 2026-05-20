@@ -1,19 +1,36 @@
 <template>
-  <!-- Mude a tag de abertura da página para isto: -->
-<q-page class="column bg-grey-3 chat-page" :style-fn="(offset) => { return { height: `calc(100vh - ${offset}px)` } }">
-    <!-- HEADER -->
-    <div class="bg-white q-pa-md shadow-2 row items-center justify-between chat-header" style="border-radius: 0 0 20px 20px; z-index: 10">
-      <!-- BOTÃO HISTÓRICO CONECTADO -->
-      <q-btn flat round icon="history" color="black" size="lg" @click="openHistoryDialog" />
-      <div class="text-center">
-        <div class="text-weight-bold text-subtitle1">Nutricionista</div>
-        <div class="text-weight-bold text-subtitle1">Inteligente</div>
+  <q-page class="column bg-grey-3 chat-page" :style-fn="(offset) => { return { height: `calc(100vh - ${offset}px)` } }">
+    <!-- HEADER COMPLETO -->
+    <div class="bg-white shadow-2 chat-header" style="border-radius: 0 0 20px 20px; z-index: 10">
+
+      <!-- Topo do Header (Botões e Título) -->
+      <div class="q-pa-md row items-center justify-between q-pb-xs">
+        <q-btn flat round icon="history" color="black" size="lg" @click="openHistoryDialog" />
+        <div class="text-center">
+          <div class="text-weight-bold text-subtitle1">Nutricionista</div>
+          <div class="text-weight-bold text-subtitle1">Inteligente</div>
+        </div>
+        <div class="column items-center">
+          <q-avatar size="48px" class="bg-grey-4">
+            <q-icon name="person" color="grey-7" />
+          </q-avatar>
+          <q-badge color="positive" text-color="white" label="FREE" style="margin-top: -10px; z-index: 9" />
+        </div>
       </div>
-      <div class="column items-center">
-        <q-avatar size="48px" class="bg-grey-4">
-          <q-icon name="person" color="grey-7" />
-        </q-avatar>
-        <q-badge color="positive" text-color="white" label="FREE" style="margin-top: -10px; z-index: 9" />
+
+      <!-- Barra de Progresso (NOVO) -->
+      <div class="row items-center q-px-md q-pb-md">
+        <div class="text-caption text-weight-bold text-grey-7 q-mr-xs">
+          Perfil: {{ Math.min(userMessageCount, 7) }}/7
+        </div>
+        <q-btn flat round icon="info" size="xs" color="grey-5" @click="showInfoDialog = true" />
+        <q-linear-progress
+          :value="Math.min(userMessageCount / 7, 1)"
+          color="green"
+          class="q-ml-sm col"
+          rounded
+          size="8px"
+        />
       </div>
     </div>
 
@@ -48,6 +65,21 @@
         </q-input>
       </q-form>
     </div>
+
+    <!-- DIALOG DE INFORMAÇÃO (NOVO) -->
+    <q-dialog v-model="showInfoDialog">
+      <q-card style="min-width: 300px; max-width: 400px; border-radius: 16px;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6 text-green text-weight-bold">Sobre o Teste</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="text-body1 text-grey-8 q-pt-sm">
+          Este teste consiste em <strong>7 interações</strong>. Durante a nossa conversa, vou mapear seus objetivos, preferências alimentares e rotina. <br><br>
+          Ao atingir o limite, utilizarei o seu perfil montado para sugerir receitas personalizadas que se encaixam perfeitamente no seu dia a dia!
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
     <!-- DIALOG DE FEEDBACK / AVALIAÇÃO DE PREFERÊNCIAS (SITUAÇÃO 1) -->
     <q-dialog v-model="showFeedbackDialog" persistent>
@@ -88,7 +120,7 @@
       </q-card>
     </q-dialog>
 
-    <!-- POPUP DO HISTÓRICO DE RECEITAS (REQUISITO 2) -->
+    <!-- POPUP DO HISTÓRICO DE RECEITAS -->
     <q-dialog v-model="showHistoryDialog">
       <q-card style="min-width: 350px; max-width: 600px; width: 90vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -106,7 +138,7 @@
             <div class="text-caption text-grey-6 text-weight-medium q-mb-sm row items-center">
               <q-icon name="calendar_today" size="xs" class="q-mr-xs" /> {{ recipe.date }}
             </div>
-            <div class="markdown-body" v-html="renderMarkdown(recipe.content)"></div>
+            <div class="markdown-body" v-html="renderMarkdown(recipe.text)"></div>
           </div>
         </q-card-section>
       </q-card>
@@ -129,23 +161,31 @@ export default {
       store: useMessagesStore(),
       showFeedbackDialog: false,
       showHistoryDialog: false,
+      showInfoDialog: false,
       rating: 0,
       feedbackSubmitted: false,
       userPreferences,
-      localRecipes: []
+      // Removemos localRecipes daqui, ele agora é calculado automaticamente!
     }
   },
   computed: {
-    messages() {
-      return this.store.messages
-    },
+  messages() {
+    return this.store.messages
   },
+  userMessageCount() {
+    return this.store.messages.filter(m => m.type === 'user').length
+  },
+  // Agora filtraremos pela flag 'isRecipe' que vamos adicionar manualmente
+  localRecipes() {
+    return this.store.messages.filter(m => m.isRecipe === true)
+  }
+},
   mounted() {
     if (this.store.messages.length === 0) {
       this.store.addMessage({
         id: Date.now(),
         type: 'bot',
-        text: 'Olá! Sou seu Nutricionista Inteligente. Para montar receitas perfeitas para você, vamos configurar seu perfil em 3 passos rápidos.\n\n**1. Quais são seus objetivos de saúde (ex: perder peso, hipertrofia) e como é sua rotina de exercícios?**'
+        text: 'Olá! Sou seu Nutricionista Inteligente. Para montar receitas perfeitas para você, vamos configurar seu perfil em 4 passos rápidos.\n\n**1. Quais são seus objetivos de saúde (ex: perder peso, hipertrofia)?**'
       })
     }
   },
@@ -167,18 +207,12 @@ export default {
     },
 
     openHistoryDialog() {
-      // Carrega os dados atualizados do localStorage toda vez que abre o popup
-      this.localRecipes = JSON.parse(localStorage.getItem('nutro_recipes') || '[]')
       this.showHistoryDialog = true
     },
 
     async submitFeedback() {
       this.loadingFeedback = true
       try {
-        // Resgata o histórico local de receitas salvas para enviar no corpo do e-mail
-        const historicoReceitasSalvas = localStorage.getItem('nutro_recipes') || '[]'
-
-        // Dica: Se process.env.WEB_FORM_KEY falhar, coloque a string direta 'sua-chave-aqui'
         const ACCESS_KEY = '05e903e1-3974-4377-82bf-cce7fb21b6a9';
 
         await fetch('https://api.web3forms.com/submit', {
@@ -192,7 +226,7 @@ export default {
             subject: '⭐ Novo Feedback de Limite Atingido - Nutro',
             nota_satisfacao: this.rating,
             preferencias_automaticas: JSON.stringify(this.userPreferences, null, 2),
-            historico_de_receitas: historicoReceitasSalvas
+            historico_de_receitas: JSON.stringify(this.localRecipes, null, 2)
           })
         })
 
@@ -215,64 +249,63 @@ export default {
     },
 
     async send() {
-      const userMessageCount = this.store.messages.filter(m => m.type === 'user').length
+    const userMessageCount = this.store.messages.filter(m => m.type === 'user').length
 
-      if (userMessageCount >= 7) {
-        this.showFeedbackDialog = true
-        return
-      }
+    if (userMessageCount >= 7) {
+      this.showFeedbackDialog = true
+      return
+    }
 
-      const messageContent = this.inputText.trim()
-      if (!messageContent || this.loading) return
+    const messageContent = this.inputText.trim()
+    if (!messageContent || this.loading) return
 
-      this.inputText = ''
-      this.loading = true
+    this.inputText = ''
+    this.loading = true
 
-      this.store.addMessage({
-        id: Date.now(),
-        type: 'user',
-        text: messageContent,
-      })
+    this.store.addMessage({
+      id: Date.now(),
+      type: 'user',
+      text: messageContent,
+    })
 
-      this.scrollToBottom()
+    this.scrollToBottom()
 
-      const loadingId = Date.now() + 1
-      this.store.addMessage({
-        id: loadingId,
-        type: 'bot',
-        text: '...',
-      })
+    const loadingId = Date.now() + 1
+    this.store.addMessage({
+      id: loadingId,
+      type: 'bot',
+      text: '...',
+      isRecipe: false // Inicializa como falso
+    })
 
-      try {
-        const responseText = await runGroq(messageContent)
-        userHistory.push({ userMessage: messageContent, botReply: responseText })
+    try {
+      const responseText = await runGroq(messageContent)
+      userHistory.push({ userMessage: messageContent, botReply: responseText })
 
-        const index = this.store.messages.findIndex((m) => m.id === loadingId)
-        if (index !== -1) {
-          this.store.messages[index].text = responseText
-        }
+      const index = this.store.messages.findIndex((m) => m.id === loadingId)
+      if (index !== -1) {
+        // Atualiza o texto E verifica se é uma receita
+        this.store.messages[index].text = responseText
 
+        // Verifica se a IA respondeu com o token de receita
         if (responseText.includes('###')) {
-          const savedRecipes = JSON.parse(localStorage.getItem('nutro_recipes') || '[]')
-          const newRecipe = {
-            id: Date.now(),
-            date: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}),
-            content: responseText
-          }
-          savedRecipes.push(newRecipe)
-          localStorage.setItem('nutro_recipes', JSON.stringify(savedRecipes))
+          this.store.messages[index].isRecipe = true
+          // Adiciona a data no formato legível para o histórico
+          this.store.messages[index].date = new Date().toLocaleDateString('pt-BR') + ' ' +
+                                            new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})
         }
-
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.loading = false
-        this.scrollToBottom()
-        this.$nextTick(() => {
-          if (this.$refs.chatInput) this.$refs.chatInput.focus()
-        })
       }
-    },
+
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.loading = false
+      this.scrollToBottom()
+      this.$nextTick(() => {
+        if (this.$refs.chatInput) this.$refs.chatInput.focus()
+      })
+    }
+  },
 
     scrollToBottom() {
       this.$nextTick(() => {
