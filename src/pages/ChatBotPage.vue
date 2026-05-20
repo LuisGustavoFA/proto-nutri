@@ -114,7 +114,8 @@
         </q-card-section>
 
         <q-card-actions align="center" v-if="feedbackSubmitted" class="q-pa-md column q-gutter-sm">
-          <q-btn color="secondary" label="Preencher formulário completo" @click="goToForm" class="full-width" />
+          <q-btn color="secondary" label="Preencher formulário completo" @click="$router.push('/sub');
+      showFeedbackDialog = false" class="full-width" />
           <q-btn flat color="grey-8" label="Fechar e continuar olhando" v-close-popup class="full-width q-ml-none" />
         </q-card-actions>
       </q-card>
@@ -241,11 +242,6 @@ export default {
       } finally {
         this.loadingFeedback = false
       }
-    },
-
-    goToForm() {
-      this.$router.push('/sub')
-      this.showFeedbackDialog = false
     },
 
     async send() {

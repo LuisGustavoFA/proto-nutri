@@ -5,7 +5,7 @@
         <q-toolbar-title class="text-weight-bold"> Nutro </q-toolbar-title>
 
         <q-btn flat label="Como funciona" @click="scrollToElement('como-funciona')" />
-        <q-btn color="black" label="Testar Protótipo" @click="openPrototype" />
+        <q-btn color="black" label="Testar Protótipo" @click="$router.push('/chatbot')" />
       </q-toolbar>
     </q-header>
 
@@ -29,7 +29,7 @@
                 color="green"
                 label="Testar Agora"
                 icon="rocket_launch"
-                @click="openPrototype"
+                @click="$router.push('/chatbot')"
               />
               <q-btn
                 size="lg"
@@ -120,7 +120,7 @@
                     color="white"
                     text-color="green"
                     label="Ver protótipo em ação"
-                    @click="openPrototype"
+                    @click="$router.push('/chatbot')"
                   />
                 </div>
               </div>
@@ -165,10 +165,6 @@ const scrollToElement = (id) => {
   const offset = el.offsetTop - 25
   const duration = 200
   setVerticalScrollPosition(target, offset, duration)
-}
-
-const openPrototype = () => {
-  this.$router.push('/chatbot')
 }
 </script>
 
