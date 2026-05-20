@@ -20,16 +20,16 @@
     </q-page-container>
     <q-footer class="bg-green" style="height: 80px">
       <div style="display: flex; flex-direction: row; width: 100%; height: 100%">
-        <q-btn flat style="flex: 1" @click="this.$router.push('/home')"
+        <q-btn flat style="flex: 1" @click="$router.push('/home')"
           ><q-icon name="home"
         /></q-btn>
-        <q-btn flat style="flex: 1" @click="this.$router.push('/objectives')"
+        <q-btn flat style="flex: 1" @click="$router.push('/objectives')"
           ><q-icon name="list"
         /></q-btn>
-        <q-btn flat style="flex: 1" @click="this.$router.push('/chatbot')"
+        <q-btn flat style="flex: 1" @click="$router.push('/chatbot')"
           ><q-icon name="chat"
         /></q-btn>
-        <q-btn flat style="flex: 1" @click="this.$router.push('/more')"
+        <q-btn flat style="flex: 1" @click="$router.push('/more')"
           ><q-icon name="person"
         /></q-btn>
       </div>
