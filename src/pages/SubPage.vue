@@ -109,10 +109,11 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
+const loadingSubmit = ref(false)
 
 const formData = reactive({
   email: '',
@@ -122,31 +123,64 @@ const formData = reactive({
 })
 
 const goBack = () => {
-  // Se o tamanho do histórico for menor ou igual a 1, significa que esta é a primeira página da aba
   if (window.history.length <= 1) {
     window.close()
   } else {
-    // Caso contrário, volta de forma segura para a página anterior
     window.history.back()
   }
 }
 
-const onSubmit = () => {
-  // Criamos uma cópia local para o log não ser afetado pelo reset
-  console.log('Dados do formulário:', { ...formData })
+const onSubmit = async () => {
+  loadingSubmit.value = true
+  try {
+    // Caso proces.env não envie, substitua direto pela sua string de chave do Web3Forms aqui
+    const ACCESS_KEY = '88e3b4e6-b7b0-47ab-9d5f-4c13c59bafca';
 
-  $q.notify({
-    position: 'top',
-    color: 'positive',
-    message: 'Sucesso! Você está na lista de espera.',
-    icon: 'done_all',
-  })
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        access_key: ACCESS_KEY,
+        subject: '🚀 Inscrição Completa e Feedback do Beta - Nutro',
+        email: formData.email,
+        satisfacao_uso_prototipo: formData.satisfactionPrototype,
+        satisfacao_ideia_geral: formData.satisfactionIdea,
+        satisfacao_atualizacao_perfil: formData.satisfactionAutoUpdate,
+        deseja_participar_beta: true,
+      })
+    })
 
-  // Aqui você limpa, mas o log lá em cima já pegou a "foto" dos dados
-  formData.email = ''
-  formData.satisfactionPrototype = 0
-  formData.satisfactionIdea = 0
-  formData.satisfactionAutoUpdate = 0
+    if (response.ok) {
+      $q.notify({
+        position: 'top',
+        color: 'positive',
+        message: 'Sucesso! Você está na lista de prioridades do Beta.',
+        icon: 'done_all',
+      })
+
+      // Limpa formulário
+      formData.email = ''
+      formData.satisfactionPrototype = 0
+      formData.satisfactionIdea = 0
+      formData.satisfactionAutoUpdate = 0
+    } else {
+      throw new Error('Falha na resposta do servidor')
+    }
+
+  } catch (error) {
+    console.error('Erro ao enviar feedback completo:', error)
+    $q.notify({
+      position: 'top',
+      color: 'negative',
+      message: 'Erro ao enviar. Verifique os dados e tente novamente.',
+      icon: 'error',
+    })
+  } finally {
+    loadingSubmit.value = false
+  }
 }
 </script>
 
