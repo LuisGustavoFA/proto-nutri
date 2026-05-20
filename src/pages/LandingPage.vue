@@ -168,7 +168,7 @@ const scrollToElement = (id) => {
 }
 
 const openPrototype = () => {
-  window.open('home', '_blank')
+  window.open('/chatbot', '_blank')
 }
 </script>
 

@@ -122,8 +122,13 @@ const formData = reactive({
 })
 
 const goBack = () => {
-  // Lógica para voltar à landing page
-  window.history.back()
+  // Se o tamanho do histórico for menor ou igual a 1, significa que esta é a primeira página da aba
+  if (window.history.length <= 1) {
+    window.close()
+  } else {
+    // Caso contrário, volta de forma segura para a página anterior
+    window.history.back()
+  }
 }
 
 const onSubmit = () => {
