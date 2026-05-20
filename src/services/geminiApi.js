@@ -36,7 +36,7 @@ export const userPreferences = reactive({
 export let userHistory = []
 
 const client = new OpenAI({
-  apiKey: 'apikey',
+  apiKey: process.env.GROQ_KEY,
   dangerouslyAllowBrowser: true,
   baseURL: 'https://api.groq.com/openai/v1',
 })
