@@ -43,6 +43,12 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
   {
+    title: 'GitHub',
+    caption: 'Repositório do Projeto',
+    icon: 'fab fa-github',
+    link: 'https://github.com/LuisGustavoFA/proto-nutri',
+  },
+  {
     title: 'Landing Page',
     caption: 'Voltar para a Landing Page',
     icon: 'home',
