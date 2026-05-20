@@ -244,7 +244,7 @@ export default {
     },
 
     goToForm() {
-      window.open('/sub', '_blank')
+      this.$router.push('/sub')
       this.showFeedbackDialog = false
     },
 

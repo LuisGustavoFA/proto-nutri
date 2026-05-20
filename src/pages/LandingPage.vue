@@ -168,7 +168,7 @@ const scrollToElement = (id) => {
 }
 
 const openPrototype = () => {
-  window.open('/chatbot', '_blank')
+  this.$router.push('/chatbot')
 }
 </script>
 
