@@ -12,7 +12,7 @@ export const userPreferences = reactive({
 export let userHistory = []
 
 const client = new OpenAI({
-  apiKey: process.env.GROQ_KEY,
+  apiKey: import.meta.env.VITE_GROQ_KEY,
   dangerouslyAllowBrowser: true,
   baseURL: 'https://api.groq.com/openai/v1',
 })
