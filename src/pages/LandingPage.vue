@@ -130,13 +130,13 @@
 
         <section class="q-py-xl text-center">
           <div class="container" style="max-width: 600px">
-            <h2 class="text-h4 q-mb-md">Quer receber acesso à uma versão mais completa?</h2>
+            <h2 class="text-h4 q-mb-md">Quer enviar feedback ou receber acesso à uma versão mais completa?</h2>
             <p class="q-mb-lg text-grey-7">
               Estamos selecionando um grupo restrito para testar uma versão avançada do nosso
               aplicativo. Deixe seu contato e ajude a construir o futuro da nutrição.
             </p>
             <q-btn
-              label="Solicitar Acesso Antecipado"
+              label="Enviar Feedback e Receber Acesso"
               color="secondary"
               @click="$router.push('/sub')"
             />

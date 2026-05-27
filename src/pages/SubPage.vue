@@ -12,9 +12,9 @@
         <div class="container q-px-md q-py-xl" style="max-width: 700px; width: 100%">
           <q-card class="q-pa-sm shadow-2">
             <q-card-section class="text-center">
-              <h1 class="text-h4 text-weight-bolder text-green q-mb-sm">Acesso Beta</h1>
+              <h1 class="text-h4 text-weight-bolder text-green q-mb-sm">Formulário de Feedback</h1>
               <p class="text-grey-7 text-subtitle1">
-                Sua opinião é fundamental. Preencha os campos abaixo para entrar na lista de
+                Sua opinião é fundamental para nós. Preencha os campos abaixo para enviar sua opinião ou entrar na lista de
                 prioridade.
               </p>
             </q-card-section>
@@ -22,7 +22,7 @@
             <q-card-section>
               <q-form @submit="onSubmit" class="q-gutter-y-lg">
                 <div>
-                  <div class="text-weight-medium q-mb-xs">Seu melhor e-mail</div>
+                  <div class="text-weight-medium q-mb-xs">E-mail</div>
                   <q-input
                     filled
                     v-model="formData.email"
@@ -80,16 +80,45 @@
                   />
                 </div>
 
+                <div>
+                  <div class="text-weight-medium q-mb-xs">Tem algo mais a acrescentar?</div>
+                  <q-input
+                    filled
+                    v-model="formData.feedback"
+                    placeholder="Feedback (Opcional)"
+                    type="text"
+                    color="green"
+                  >
+                    <template v-slot:prepend>
+                      <q-icon name="fa fa-paper-plane" color="green" />
+                    </template>
+                  </q-input>
+                </div>
+
+                <div class="bg-white q-pa-md rounded-borders border-grey-4 flex justify-between items-center">
+                  <div>
+                    <div class="text-weight-medium text-grey-9">Deseja participar do Beta do Nutro?</div>
+                    <div class="text-caption text-grey-6">Garante seu lugar na lista de prioridades</div>
+                  </div>
+                  <q-toggle
+                    v-model="formData.joinBeta"
+                    color="green"
+                    size="lg"
+                    checked-icon="check"
+                    unchecked-icon="clear"
+                  />
+                </div>
+
                 <div class="text-center q-pt-md">
                   <q-btn
-                    label="Quero participar do Beta"
+                    :label="formData.joinBeta ? 'Enviar feedback e participar do beta' : 'Enviar feedback'"
                     type="submit"
                     color="green"
                     size="lg"
                     class="full-width text-weight-bold"
                     icon-right="send"
                   />
-                  <p class="q-mt-md text-caption text-grey-6">
+                  <p v-if="formData.joinBeta" class="q-mt-md text-caption text-grey-6">
                     Ao se cadastrar, você concorda em receber atualizações sobre o lançamento.
                   </p>
                 </div>
@@ -120,6 +149,8 @@ const formData = reactive({
   satisfactionPrototype: 0,
   satisfactionIdea: 0,
   satisfactionAutoUpdate: 0,
+  feedback: '',
+  joinBeta: true,
 })
 
 const goBack = () => {
@@ -144,12 +175,13 @@ const onSubmit = async () => {
       },
       body: JSON.stringify({
         access_key: ACCESS_KEY,
-        subject: '🚀 Inscrição Completa e Feedback do Beta - Nutro',
+        subject: '🚀 Formulário de Feedback - Nutro',
         email: formData.email,
         satisfacao_uso_prototipo: formData.satisfactionPrototype,
         satisfacao_ideia_geral: formData.satisfactionIdea,
         satisfacao_atualizacao_perfil: formData.satisfactionAutoUpdate,
-        deseja_participar_beta: true,
+        feedback: formData.feedback,
+        deseja_participar_beta: formData.joinBeta ? 'Sim' : 'Não',
       })
     })
 
@@ -166,6 +198,9 @@ const onSubmit = async () => {
       formData.satisfactionPrototype = 0
       formData.satisfactionIdea = 0
       formData.satisfactionAutoUpdate = 0
+      formData.satisfactionAutoUpdate = 0
+      formData.feedback = ''
+      formData.joinBeta = true
     } else {
       throw new Error('Falha na resposta do servidor')
     }
